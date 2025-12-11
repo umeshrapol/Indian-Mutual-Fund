@@ -11,7 +11,7 @@ This project analyzes a historical NAV dataset of Indian mutual funds (2006–20
 - Core fields used: scheme identifier, fund house, scheme name, date, NAV, scheme category
 - Scope: thousands of schemes spanning equity, debt, hybrid, liquid funds and fixed-maturity plans (some categories labeled by duration, e.g., "1099 Days")
 
-## High-level workflow (explain-only)
+## High-level workflow
 - Validate the raw dataset for structural issues and duplicates.
 - Convert and standardize date information so each scheme’s NAV history can be ordered chronologically.
 - Build a scheme-level summary that captures each scheme’s first and last NAV and the corresponding start and end dates.
@@ -22,20 +22,20 @@ This project analyzes a historical NAV dataset of Indian mutual funds (2006–20
 - Aggregate results at fund-house and scheme-category levels to identify patterns and provide comparative summaries.
 - Diagnose and remove outliers that distort visualizations and summary statistics, then replot and re-evaluate.
 
-## Key data-quality issues discovered (photo-based evidence)
+## Key data-quality issues discovered
 - Some NAV histories contained values that were effectively zero at the start of a scheme’s record. These near-zero start values produced astronomically large CAGR values (tens of thousands of percent) and invalid risk metrics.
 - A small number of schemes exhibited NAV corrections, resets, or sudden jumps that are inconsistent with normal market behavior; those cases produced extreme volatility and rendered raw visualizations unreadable.
 - The initial raw risk–return scatter plot was dominated by a few extreme outliers (examples observed: annualized volatility > 600,000% and CAGR > 40,000%). This made the vast majority of schemes collapse visually near the origin.
 - Some short-duration schemes (duration much less than one year) exaggerated CAGR and Sharpe calculations if not properly filtered.
 
-## Exact cleaning and outlier rules applied (explained)
+## Exact cleaning and outlier rules applied
 - Remove any schemes where the first or last available NAV is zero or negative because these lead to division errors or meaningless CAGR values.
 - Exclude schemes with non-positive duration (start date equals end date or invalid dates), since duration must be positive to compute annualized returns.
 - Filter out schemes with extreme CAGR values that are clearly not representative of real investor outcomes. The applied rule kept only schemes with CAGR inside a reasonable window (for example, excluding very large positive or negative extremes that indicate data issues).
 - Filter out schemes with unrealistically high annualized volatility (these values typically indicate NAV parsing errors or data anomalies).
 - After applying the above filters, convert the remaining CAGR and volatility measures into percentage units for human-friendly visualization and reporting.
 
-## What the initial (uncleaned) visualizations showed
+## What the initial 
 - A raw scatter plot of CAGR vs annualized volatility was unreadable: a handful of schemes with extreme values stretched the axes so that the cluster of realistic schemes became invisible.
 - A top-schemes table (uncleaned) contained schemes with implausible CAGR values (including fixed-term plans and liquid funds with extremely high computed returns), indicating the presence of parse or data-quality problems rather than genuinely astronomical returns.
 
@@ -60,12 +60,12 @@ This project analyzes a historical NAV dataset of Indian mutual funds (2006–20
 - Debt, liquid, and duration-labeled categories (fixed maturity durations) tended to have lower average returns and much lower volatility. Some debt categories showed negative average returns in the observed period, suggesting credit stress or rate-cycle effects.
 - Category counts varied widely; categories with large counts provide more stable averages, while small categories are sensitive to single-scheme outcomes.
 
-## Risk-adjusted performance (Sharpe-like) observations
+## Risk-adjusted performance
 - The Sharpe-like ranking highlighted many short-duration debt products, overnight funds, and fixed-maturity plans. These schemes had extremely small volatility, which mathematically produced very large Sharpe values.
 - Interpreting Sharpe-like ratios requires context: very large Sharpe values often mean the scheme is ultra-stable (low volatility) rather than being an exceptional long-term growth vehicle.
 - For investor-facing recommendations, pair Sharpe results with absolute return and duration context (for example, overnight funds are not comparable to long-term equity funds despite high Sharpe).
 
-## Top and bottom lists (cleaned view)
+## Top and bottom lists
 - Top performers (cleaned): mostly equity and hybrid schemes with high CAGR and moderate volatility. These are plausible long-term performers for growth-focused investors.
 - Bottom performers (cleaned): included several fixed-maturity or debt-oriented schemes that lost value over their lifetimes or suffered credit events; negative CAGRs ranged in the sample roughly from –40% to –46% among the worst cases.
 
@@ -95,7 +95,7 @@ This project analyzes a historical NAV dataset of Indian mutual funds (2006–20
 - Present both absolute and risk-adjusted metrics together for investor-facing reports. For example, show CAGR, volatility, and Sharpe-like ratio side by side with scheme duration and category.
 - When communicating results, emphasize categories and durations so readers understand the investment horizon (for example, overnight funds vs. small-cap funds).
 
-## What to include in the repository (suggested non-code content)
+## What to include in the repository
 - A copy of the notebook containing the original screenshots with captions that point to the cleaning decisions and the precise photographic evidence that motivated each rule.
 - A clear data dictionary describing each column and any preprocessing assumptions (date format, NAV decimal conventions).
 - A short executive summary (1–2 paragraphs) highlighting the most robust conclusions: equity categories outperform on average but at higher volatility; some debt categories faced real negative returns; cleaning is essential to avoid misleading visuals.
